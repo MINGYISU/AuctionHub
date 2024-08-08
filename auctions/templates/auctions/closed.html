@@ -1,0 +1,13 @@
+{% extends "auctions/display.html" %}
+
+{% block title %} Closed Listing: {{ listing.title }} {% endblock %}
+
+{% block active %}
+    <h1>This Auction Listing has closed. </h1>
+    {% if winner %}
+        <h1>Winner: {{ winner }} Final Bid: ${{ price }}
+    {% else %}
+        <h1>No Bidder is willing to buy. </h1>
+    {% endif %}
+
+{% endblock %}

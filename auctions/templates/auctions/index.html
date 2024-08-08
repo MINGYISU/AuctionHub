@@ -1,0 +1,45 @@
+{% extends "auctions/layout.html" %}
+
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% get_bids_all as bids_all %}
+
+
+{% block body %}
+    {% if watchfor %}
+        <h2><strong>{{ watchfor }}</strong>'s Watchlist</h2>
+    {% elif createdby %}
+    <h2>Listings created by <strong>{{ createdby }}</strong></h2>
+    {%else %}
+        <h2>Active Listings</h2>
+    {% endif %}
+
+    <div class="container mt-5">
+        <div class="row">
+            {% for listing in listings %}
+                {% if not listing.finished %}
+                    <div class="col-md-4">
+                        <div class="commodity-box">
+                            <div class="commodity-details">
+                                <div class="commodity-title">
+                                    <a href="{% url 'display' listing.id %}">{{ listing.title }}</a>
+                                </div>
+                                <div class="commodity-description">{{ listing.description }}</div>
+                                {% get_bids_filter listing as bids_all_for_one %}
+                                {% if bids_all_for_one %}
+                                    {% get_bids_highest listing as bids_highest %}
+                                    <div class="commodity-price">Current Price: ${{ bids_highest }}</div>
+                                {% else %}
+                                    <div class="commodity-price">Current Price: ${{ listing.startBid }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% empty %}
+                <h1>No listings.</h1>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

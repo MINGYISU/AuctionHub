@@ -1,0 +1,16 @@
+{% extends "auctions/display.html" %}
+
+{% block title %} Bidding for {{ listing.title }} {% endblock %}
+
+{% block placebid %}
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+    <form action="{% url 'placebid' listing.id %}" method="post">
+        {% csrf_token %}
+        <label for="yourbid">Your Bid: $</label>
+        <input type="number" id="yourbid" name="yourbid" value={{ price }} step="0.01" max="99999.99">
+        
+        <input type="submit" id="submit" value="Place Your Bid">
+    </form>
+{% endblock %}

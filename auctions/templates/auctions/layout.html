@@ -1,0 +1,95 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Auctions{% endblock %}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+        <style>
+            body {
+                padding: 10px;
+            }
+            
+            .commodity-box {
+                display: flex;
+                border: 1px solid #ddd;
+                padding: 15px;
+                margin-bottom: 50px;
+                border-radius: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .commodity-title {
+                font-size: 1.5rem;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .commodity-description {
+                font-size: 1rem;
+                margin-bottom: 10px;
+            }
+
+            .commodity-details {
+                flex: 1;
+            }
+
+            .commodity-price {
+                font-size: 1.2rem;
+                color: #007bff;
+            }
+            .commodity-image {
+                flex: 0 0 200px; /* Adjust the width as needed */
+                max-width: 200px;
+                height: auto;
+                margin-right: 15px;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <h1>Auctions</h1>
+        <div>
+            {% if user.is_authenticated %}
+                Signed in as <strong>{{ user.username }}</strong>.
+            {% else %}
+                Not signed in.
+            {% endif %}
+        </div>
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'create' %}">Create New Listing</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'showwatchlist' %}">Watchlist</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'selllist' %}">My List</a>
+            </li>
+            {% if user.is_authenticated %}
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                </li>
+            {% endif %}
+        </ul>
+        <hr>
+        {% block body %}
+        {% endblock %}
+    </body>
+</html>

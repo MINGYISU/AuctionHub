@@ -1,0 +1,49 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %} Listing: {{ listing.title }} {% endblock %}
+
+{% block body %}
+    <h1>{{ listing.title }}</h1>
+    <div>{{ listing.description }}</div>
+    <div>Current Price: ${{ price }}</div>
+    {% block active %}
+        <div>
+            <strong>Bidders List: </strong>
+            <ul>
+                {% for bid in bidders %}
+                    <li>{{ bid.bidder.username }}: ${{ bid.curBid }}</li>
+                {% endfor %}
+                <li>Start Bid: ${{ listing.startBid }}</li>
+            </ul>
+        </div>
+
+        {% if owner %}
+            <h1>This is the listing created by you. </h1>
+            <a href="{% url 'close' listing.id %}">Close This Listing</a>
+        {% else %}
+            <a href="{% url 'placebid' listing.id %}">Place a bid</a>
+            {% if exist %}
+                <a href="{% url 'changewl' listing.id %}">Remove from Watchlist</a>
+            {% else %}
+                <a href="{% url 'changewl' listing.id %}">Add to Watchlist</a>
+            {% endif %}
+        {% endif %}
+        <a href="{% url 'comment' listing.id %}">Comment</a>
+
+        {% block placebid %}
+        {% endblock %}
+
+        {% block writecomment %}
+        {% endblock %}
+        
+    {% endblock %}
+    
+    <div>
+        <strong>Comments: </strong>
+        <ul>
+            {% for comm in comments %}
+                <li>{{ comm.created_at.month }}/{{ comm.created_at.day }} <strong>{{ comm.writer.username }}</strong>: {{ comm.content }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
