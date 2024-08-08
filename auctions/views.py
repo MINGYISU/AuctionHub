@@ -149,6 +149,9 @@ def place_bid(request, identity):
     # if bidding on a finished auction listing, raise an error
     if listing.finished:
         raise Http404("Cannot bid on a closed listing!")
+
+    if user.id == listing.seller.id:
+        raise Http404("Seller cannot place a bid!")
     
     if request.method == "POST":
         yourbid = request.POST["yourbid"]
@@ -222,6 +225,9 @@ def write_comment(request, identity):
     writer = request.user
     listing = get_object_or_404(Listing, id=identity)
 
+    if listing.finished:
+        raise Http404("Listing closed! Cannot add comments! ")
+
     if request.method == "POST":
         # create a new comment instance
         content = request.POST["content"]
@@ -232,7 +238,9 @@ def write_comment(request, identity):
     else:
         return render(request, "auctions/comment.html", {
             "listing": listing, 
-            "comments": Comment.objects.filter(target=listing).all()[::-1]
+            "comments": Comment.objects.filter(target=listing).all()[::-1], 
+            "owner": request.user.id == listing.seller.id, 
+            "price": get_cur_bid(listing)
         })
 
 @login_required

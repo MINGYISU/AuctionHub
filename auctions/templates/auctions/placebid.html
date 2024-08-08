@@ -2,6 +2,12 @@
 
 {% block title %} Bidding for {{ listing.title }} {% endblock %}
 
+{% block hide%}
+    <div>
+        <a href="{% url 'display' listing.id %}">Cancel Bid</a>
+    </div>
+{% endblock %}
+
 {% block placebid %}
     {% if message %}
         <div>{{ message }}</div>

@@ -4,8 +4,25 @@
 
 {% block body %}
     <h1>{{ listing.title }}</h1>
+
+    {% if exist %}
+        <a href="{% url 'changewl' listing.id %}">Remove from Watchlist</a>
+    {% else %}
+        <a href="{% url 'changewl' listing.id %}">Add to Watchlist</a>
+    {% endif %}
+
+    {% if owner %}
+        <div>
+            <a href="{% url 'close' listing.id %}">Close This Listing</a>
+        </div>
+    {% endif %}
+
     <div>{{ listing.description }}</div>
+
+    <div>Seller: {{ listing.seller.username }}</div>
+
     <div>Current Price: ${{ price }}</div>
+
     {% block active %}
         <div>
             <strong>Bidders List: </strong>
@@ -17,27 +34,29 @@
             </ul>
         </div>
 
-        {% if owner %}
-            <h1>This is the listing created by you. </h1>
-            <a href="{% url 'close' listing.id %}">Close This Listing</a>
-        {% else %}
-            <a href="{% url 'placebid' listing.id %}">Place a bid</a>
-            {% if exist %}
-                <a href="{% url 'changewl' listing.id %}">Remove from Watchlist</a>
-            {% else %}
-                <a href="{% url 'changewl' listing.id %}">Add to Watchlist</a>
-            {% endif %}
+        
+        {% if not owner %}
+            {% block hide %}
+                <div>
+                    <a href="{% url 'placebid' listing.id %}">Place a bid</a>
+                </div>
+            {% endblock %}
         {% endif %}
-        <a href="{% url 'comment' listing.id %}">Comment</a>
+
+        
 
         {% block placebid %}
         {% endblock %}
 
-        {% block writecomment %}
-        {% endblock %}
+        
         
     {% endblock %}
-    
+
+    {% if not listing.finished %}
+        {% block cancel_comm %}
+            <a href="{% url 'comment' listing.id %}">Write Comments</a>
+        {% endblock %}
+    {% endif %}
     <div>
         <strong>Comments: </strong>
         <ul>
@@ -46,4 +65,7 @@
             {% endfor %}
         </ul>
     </div>
+
+    {% block writecomment %}
+    {% endblock %}
 {% endblock %}

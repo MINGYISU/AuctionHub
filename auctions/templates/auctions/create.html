@@ -5,16 +5,25 @@
 {% block body %}
 <form action={% url 'create' %} method="post">
     {% csrf_token %}
-    <label for="title">Title: </label>
-    <input type="text" id="title" placeholder="Title" name="title">
 
-    <label for="description">Description: </label>
-    <textarea id="description" name="description" rows="10" cols="50"></textarea><br><br>
+    <div class="form-group">
+        <label for="title">Title: </label>
+        <input type="text" id="title" placeholder="Title" name="title">
+    </div>
 
-    <label for="startBid">Start Bid: $</label>
-    <input type="number" id="startBid" name="startBid" step="0.01" max="99999.99">
+    <div class="form-group">
+        <label for="description">Description: </label>
+        <textarea id="description" name="description" rows="5" cols="50" placeholder="Description"></textarea><br><br>
+    </div>
 
-    <input type="submit" id="submit" value="Create Listing">
+    <div class="form-group">
+        <label for="startBid">Start Bid: $</label>
+        <input type="number" id="startBid" name="startBid" step="0.01" max="99999.99" placeholder="0.01">
+    </div>
+
+    <div class="form-group">
+        <input type="submit" id="submit" value="Create Listing">
+    </div>
 </form>
 
 {% endblock %}

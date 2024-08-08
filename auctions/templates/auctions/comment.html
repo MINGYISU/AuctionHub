@@ -2,12 +2,20 @@
 
 {% block title %} Writting comments for {{ listing.title }} {% endblock %}
 
+{% block cancel_comm %}
+    <div>
+        <a href="{% url 'display' listing.id %}">Cancel Comments</a>
+    </div>
+{% endblock %}
+
 {% block writecomment %}
     <form action="{% url 'comment' listing.id %}" method="post">
         {% csrf_token %}
-        <label for="content">Comment: </label>
-        <textarea id="content" name="content" rows="10" cols="50"></textarea><br><br>
+        <div class="form-group">
+            <label for="content">Commenting: </label>
+            <textarea id="content" name="content" rows="1" cols="50" placeholder="Please show kindness and respect"></textarea><br><br>
+        </div>
         
-        <input type="submit" id="submit" value="Comment">
+        <input type="submit" id="submit" value="Submit">
     </form>
 {% endblock %}
