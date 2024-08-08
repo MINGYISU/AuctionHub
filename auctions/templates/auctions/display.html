@@ -5,15 +5,24 @@
 {% block body %}
     <h1>{{ listing.title }}</h1>
 
-    {% if exist %}
-        <a href="{% url 'changewl' listing.id %}">Remove from Watchlist</a>
-    {% else %}
-        <a href="{% url 'changewl' listing.id %}">Add to Watchlist</a>
-    {% endif %}
+    <form action="{% url 'changewl' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="identity" value="{{ listing.id }}">
+        {% if exist %}
+            <input type="submit" name="submit" value="Remove from Watchlist">
+        {% else %}
+            <input type="submit" name="submit" value="Add to Watchlist">
+        {% endif %}
+    </form>
+    
 
     {% if owner %}
         <div>
-            <a href="{% url 'close' listing.id %}">Close This Listing</a>
+            <form action="{% url 'close' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="identity" value="{{ listing.id }}">
+                <input type="submit" name="submit" value="Close This Listing">
+            </form>
         </div>
     {% endif %}
 

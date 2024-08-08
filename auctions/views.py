@@ -116,7 +116,7 @@ def display_render(request, listing, filename, message=None):
         parameters["message"] = message
     return render(request, f"auctions/{filename}.html", parameters)
 
-
+@login_required
 def display(request, identity):
     if request.method == "GET":
         listing = get_object_or_404(Listing, id=identity)
@@ -172,23 +172,25 @@ def place_bid(request, identity):
         return display_render(request, listing, "placebid")
 
 @login_required
-def change_wl(request, identity):
-    # either add or remove a listing from the user's watchlist based on the existence of the listing in the watchlist
-    user = request.user
-    listing = get_object_or_404(Listing, id=identity)
-    is_in = Watchlist.objects.filter(creator=user, belonging=listing).exists()
+def change_wl(request):
+    if request.method == "POST":
+        # either add or remove a listing from the user's watchlist based on the existence of the listing in the watchlist
+        user = request.user
+        identity = request.POST["identity"]
+        listing = get_object_or_404(Listing, id=identity)
+        is_in = Watchlist.objects.filter(creator=user, belonging=listing).exists()
 
-    # the listing is not in the watchlist, add it
-    if not is_in:
-        new_wl = Watchlist(belonging=listing, creator=user)
-        new_wl.save()
-    # the listing is in the watchlist, remove it
-    else:
-        del_wl = Watchlist.objects.get(belonging=listing, creator=user)
-        del_wl.delete()
-    
-    # redirect to the detailed page of the listing
-    return HttpResponseRedirect(reverse('display', args=[identity]))
+        # the listing is not in the watchlist, add it
+        if not is_in:
+            new_wl = Watchlist(belonging=listing, creator=user)
+            new_wl.save()
+        # the listing is in the watchlist, remove it
+        else:
+            del_wl = Watchlist.objects.get(belonging=listing, creator=user)
+            del_wl.delete()
+        
+        # redirect to the detailed page of the listing
+        return HttpResponseRedirect(reverse('display', args=[identity]))
 
 
 @login_required
@@ -204,21 +206,23 @@ def show_watchlist(request):
     })
 
 @login_required
-def close(request, identity):
-    user = request.user
-    listing = get_object_or_404(Listing, id=identity)
-    seller = listing.seller
+def close(request):
+    if request.method == "POST":
+        user = request.user
+        identity = request.POST["identity"]
+        listing = get_object_or_404(Listing, id=identity)
+        seller = listing.seller
 
-    # if the user is not the seller, raise an error
-    if user.id != seller.id:
-        raise Http404("Error! You cannot close this page!")
+        # if the user is not the seller, raise an error
+        if user.id != seller.id:
+            raise Http404("Error! You cannot close this page!")
 
-    # change the state to True
-    listing.finished = True
-    listing.save()
+        # change the state to True
+        listing.finished = True
+        listing.save()
 
-    # redirect to the detailed page of the listing
-    return HttpResponseRedirect(reverse('display', args=[identity]))
+        # redirect to the detailed page of the listing
+        return HttpResponseRedirect(reverse('display', args=[identity]))
 
 @login_required
 def write_comment(request, identity):

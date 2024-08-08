@@ -10,7 +10,9 @@
 
 {% block placebid %}
     {% if message %}
-        <div>{{ message }}</div>
+        <div>
+            <p class="red-text">{{ message }}</p>
+        </div>
     {% endif %}
     <form action="{% url 'placebid' listing.id %}" method="post">
         {% csrf_token %}
